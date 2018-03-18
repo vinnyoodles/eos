@@ -232,6 +232,22 @@ uint32_t last_fnc_err = 0;
 		captured = capture[3]; \
 	}
 
+BOOST_FIXTURE_TEST_CASE(capstone_tests, tester) { try {
+	produce_blocks(2);
+	create_account( N(testapi) );
+	create_account( N(acc1) );
+	create_account( N(acc2) );
+	create_account( N(acc3) );
+	create_account( N(acc4) );
+	produce_blocks(1000);
+	set_code( N(testapi), test_api_wast );
+	produce_blocks(1);
+
+   // test assert_true
+	CALL_TEST_FUNCTION( *this, "test_capstone", "function_tracker_test", {});
+
+} FC_LOG_AND_RETHROW() }
+
 /*************************************************************************************
  * action_tests test case
  *************************************************************************************/

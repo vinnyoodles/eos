@@ -856,6 +856,15 @@ class action_api : public context_aware_api {
       }
 };
 
+class capstone_api : public context_aware_api {
+   public:
+   capstone_api( wasm_interface& wasm )
+      :context_aware_api(wasm,true){}
+      void function_tracker( int32_t idx ) {
+        std::cout << "FUNCTION : " << idx << "\n";
+      }
+};
+
 class console_api : public context_aware_api {
    public:
       console_api( wasm_interface& wasm )
@@ -1781,6 +1790,10 @@ REGISTER_INTRINSICS(apply_context,
    (require_authorization, void(int64_t), "require_auth", void(apply_context::*)(const account_name&)const)
    (has_authorization,     int(int64_t), "has_auth", bool(apply_context::*)(const account_name&)const)
    (is_account,            int(int64_t)           )
+);
+
+REGISTER_INTRINSICS(capstone_api,
+   (function_tracker,              void(int)  )
 );
 
 REGISTER_INTRINSICS(console_api,

@@ -271,6 +271,10 @@ struct test_memory {
    static void test_memcmp();
 };
 
+struct test_capstone {
+    static void function_tracker_test();
+};
+
 struct test_checktime {
    static void checktime_pass();
    static void checktime_failure();

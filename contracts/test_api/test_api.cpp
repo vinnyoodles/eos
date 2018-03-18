@@ -16,6 +16,8 @@
 #include "test_chain.cpp"
 #include "test_transaction.cpp"
 #include "test_checktime.cpp"
+#include "test_capstone.cpp"
+#include "test_capstone_functions.cpp"
 
 extern "C" {
 
@@ -141,6 +143,8 @@ extern "C" {
       WASM_TEST_HANDLER(test_real, test_multiplication);
       WASM_TEST_HANDLER(test_real, test_division);
       WASM_TEST_HANDLER(test_real, test_division_by_0);
+
+      WASM_TEST_HANDLER(test_capstone, function_tracker_test);
 
       // test checktime
       WASM_TEST_HANDLER(test_checktime, checktime_pass);

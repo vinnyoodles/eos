@@ -40,6 +40,25 @@ void globals_injection_visitor::inject( Module& m ) {
 void globals_injection_visitor::initializer() {
 }
 
+void function_injection_visitor::initializer() {}
+
+void function_injection_visitor::inject( Module& m) {
+    int i = 0;
+    for ( auto& fd : m.functions.defs ) {
+        std::cout << "Index : " << i << "\n";
+        int32_t idx;
+        injector_utils::add_import<ResultType::none, ValueType::i32>( m, u8"env", u8"function_tracker", idx);
+        wasm_ops::op_types<>::i32_const_t tracked_idx;
+        tracked_idx.field = i++;
+        std::vector<U8> packed_idx = tracked_idx.pack();
+
+        wasm_ops::op_types<>::call_t fun;
+        fun.field = idx;
+        std::vector<U8> packed_fun = fun.pack();
+        fd.code.insert(fd.code.begin(), packed_fun.begin(), packed_fun.end());
+        fd.code.insert(fd.code.begin(), packed_idx.begin(), packed_idx.end());
+    }  
+}
 uint32_t instruction_counter::icnt = 0;
 int32_t  checktime_injector::checktime_idx = -1;
 
