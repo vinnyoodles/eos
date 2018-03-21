@@ -32,6 +32,7 @@
 #include <mutex>
 #include <thread>
 #include <condition_variable>
+#include <map>
 
 namespace eosio { namespace chain {
    using namespace contracts;
@@ -856,12 +857,15 @@ class action_api : public context_aware_api {
       }
 };
 
+map <int, int> function_map;
+
 class capstone_api : public context_aware_api {
    public:
    capstone_api( wasm_interface& wasm )
       :context_aware_api(wasm,true){}
       void function_tracker( int32_t idx ) {
-        std::cout << "FUNCTION : " << idx << "\n";
+        function_map[idx] ++;
+        std::cout << "FUNCTION : " << idx << " called " << function_map[idx] << "\n";
       }
 };
 
