@@ -5,6 +5,7 @@
 #include <eosio/chain/exceptions.hpp>
 #include "IR/Module.h"
 #include "IR/Operators.h"
+#include "Runtime/Runtime.h"
 #include "WASM/WASM.h"
 
 namespace eosio { namespace chain { namespace wasm_injections {
@@ -40,10 +41,20 @@ void globals_injection_visitor::inject( Module& m ) {
 void globals_injection_visitor::initializer() {
 }
 
-void function_injection_visitor::initializer() {}
+// static initialization
+std::map<int32_t, int32_t> function_injection_visitor::function_map;
+std::map<int32_t, std::string> function_injection_visitor::function_name_map;
+
+void function_injection_visitor::initializer() {
+   if (!function_map.empty())
+      function_map.clear();
+   if (!function_name_map.empty())
+      function_name_map.clear();
+}
 
 void function_injection_visitor::inject( Module& m) {
     int i = 0;
+
     for ( auto& fd : m.functions.defs ) {
         std::cout << "Index : " << i << "\n";
         int32_t idx;
@@ -58,7 +69,9 @@ void function_injection_visitor::inject( Module& m) {
         fd.code.insert(fd.code.begin(), packed_fun.begin(), packed_fun.end());
         fd.code.insert(fd.code.begin(), packed_idx.begin(), packed_idx.end());
     }  
+//       std::cout << "fn " << fn.exportName << " " << i++ << "\n";
 }
+
 uint32_t instruction_counter::icnt = 0;
 int32_t  checktime_injector::checktime_idx = -1;
 

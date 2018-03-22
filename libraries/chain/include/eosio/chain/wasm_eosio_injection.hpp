@@ -102,6 +102,8 @@ namespace eosio { namespace chain { namespace wasm_injections {
    struct function_injection_visitor {
       static void inject( IR::Module& m );
       static void initializer();
+      static std::map<int32_t, int32_t> function_map;
+      static std::map<int32_t, std::string> function_name_map;
    };
 
    struct tables_injection_visitor {
@@ -220,10 +222,10 @@ namespace eosio { namespace chain { namespace wasm_injections {
          arg.new_code->insert( arg.new_code->end(), injected.begin(), injected.end() );
       }
    };
-
+#pragma message ("Disabled checktime injection for Capstone!!!")
    struct pre_op_injectors : wasm_ops::op_types<pass_injector> {
-      using block_t           = wasm_ops::block                   <instruction_counter, checktime_injector>;
-      using loop_t            = wasm_ops::loop                    <instruction_counter, checktime_injector>;
+      using block_t           = wasm_ops::block                   <instruction_counter>; //, checktime_injector>;
+      using loop_t            = wasm_ops::loop                    <instruction_counter>; //, checktime_injector>;
       using if__t             = wasm_ops::if_                     <instruction_counter>;
       using else__t           = wasm_ops::else_                   <instruction_counter>;
       
@@ -405,6 +407,7 @@ namespace eosio { namespace chain { namespace wasm_injections {
                }
                fd.code = post_code;
             }
+            /* TODO Vincent, add write to file here */
          }
       private:
          IR::Module* _module;
