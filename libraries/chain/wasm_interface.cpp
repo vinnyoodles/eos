@@ -863,12 +863,12 @@ class capstone_api : public context_aware_api {
    capstone_api( wasm_interface& wasm )
       :context_aware_api(wasm,true){}
       void function_tracker( int32_t idx ) {
-         auto* fn_map = &wasm_injections::function_injection_visitor::function_map;
-         if (fn_map->find(idx) != fn_map->end())
-           fn_map->at(idx) += 1;
-         else
-            fn_map->emplace( idx, 1 );
-         std::cout << "FUNCTION : " << idx << " called " << fn_map->at(idx) << "\n";
+        auto* fn_map = &wasm_injections::function_injection_visitor::function_map;
+        if (fn_map->find(idx) != fn_map->end())
+          fn_map->at(idx) += 1;
+        else
+          fn_map->emplace( idx, 1 );
+        std::cout << "FUNCTION : " << idx << " called " << fn_map->at(idx) << "\n";
       }
 };
 

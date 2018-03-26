@@ -69,7 +69,6 @@ void function_injection_visitor::inject( Module& m) {
         fd.code.insert(fd.code.begin(), packed_fun.begin(), packed_fun.end());
         fd.code.insert(fd.code.begin(), packed_idx.begin(), packed_idx.end());
     }  
-//       std::cout << "fn " << fn.exportName << " " << i++ << "\n";
 }
 
 uint32_t instruction_counter::icnt = 0;
