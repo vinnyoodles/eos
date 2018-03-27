@@ -857,7 +857,6 @@ class action_api : public context_aware_api {
       }
 };
 
-
 class capstone_api : public context_aware_api {
    public:
    capstone_api( wasm_interface& wasm )
@@ -868,7 +867,11 @@ class capstone_api : public context_aware_api {
           fn_map->at(idx) += 1;
         else
           fn_map->emplace( idx, 1 );
-        std::cout << "FUNCTION : " << idx << " called " << fn_map->at(idx) << "\n";
+
+        for (auto iter = fn_map->begin(); iter != fn_map->end(); iter++) {
+          std::cout << "key: " << iter->first << ", value: " << iter->second << "\n";
+        }
+        std::cout << "\n";
       }
 };
 
