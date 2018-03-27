@@ -39,6 +39,7 @@
 	TEMP_DIR=/tmp
 	ARCH=$(uname)
 	DISK_MIN=20
+	CPU_CORE=8
 	
 	txtbld=$(tput bold)
 	bldred=${txtbld}$(tput setaf 1)
