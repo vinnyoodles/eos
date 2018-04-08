@@ -579,6 +579,7 @@ namespace LLVMJIT
 		Timing::Timer optimizationTimer;
 
 		auto fpm = new llvm::legacy::FunctionPassManager(llvmModule);
+		fpm->add(llvm::createFunctionInliningPass());
 		fpm->add(llvm::createPromoteMemoryToRegisterPass());
 		fpm->add(llvm::createInstructionCombiningPass());
 		fpm->add(llvm::createCFGSimplificationPass());
