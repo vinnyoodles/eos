@@ -33,6 +33,23 @@
 #include "llvm-c/Disassembler.h"
 #endif
 
+#include "llvm/Pass.h"
+#include "llvm/IR/Function.h"
+
+namespace llvm {
+    struct FunctionInlinePass : public FunctionPass {
+        static char ID;
+        FunctionInlinePass() : FunctionPass(ID) {}
+
+        virtual bool runOnFunction(Function &F) {
+            // todo: obtain CallSite of function and call InlineFunction with the CallSite and InlineFunctionInfo
+            return false;
+        }
+    };
+}
+
+char llvm::FunctionInlinePass::ID = 0;
+
 namespace LLVMJIT
 {
 	llvm::LLVMContext context;
@@ -579,7 +596,7 @@ namespace LLVMJIT
 		Timing::Timer optimizationTimer;
 
 		auto fpm = new llvm::legacy::FunctionPassManager(llvmModule);
-		fpm->add(llvm::createFunctionInliningPass());
+		fpm->add(new llvm::FunctionInlinePass());
 		fpm->add(llvm::createPromoteMemoryToRegisterPass());
 		fpm->add(llvm::createInstructionCombiningPass());
 		fpm->add(llvm::createCFGSimplificationPass());
