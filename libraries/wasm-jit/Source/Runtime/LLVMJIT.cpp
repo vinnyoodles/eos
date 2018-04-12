@@ -42,7 +42,14 @@ namespace llvm {
         FunctionInlinePass() : FunctionPass(ID) {}
 
         virtual bool runOnFunction(Function &F) {
-            // todo: obtain CallSite of function and call InlineFunction with the CallSite and InlineFunctionInfo
+            for (auto& basicBlock : F) {
+                for (auto& instruction : basicBlock) {
+                    if (const CallInst *callInstruction = dyn_cast<CallInst>(&instruction)) {
+                        errs() << "Found call instruction: " << F.getName() << "\n";
+                        llvm::InlineFunction(callInstruction, NULL, NULL, false);
+                    }
+                }
+            }
             return false;
         }
     };
