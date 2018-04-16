@@ -8,7 +8,6 @@
 
 extern void called();
 void test_capstone::function_tracker_test() {
-
     called();
     called();
 }

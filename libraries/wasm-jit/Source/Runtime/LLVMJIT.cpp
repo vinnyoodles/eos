@@ -42,22 +42,28 @@ namespace llvm {
         FunctionInlinePass() : FunctionPass(ID) {}
 
         virtual bool runOnFunction(Function &F) {
-            for (auto& basic_block : F) {
-                for (auto& instruction : basic_block) {
-                    if (CallInst *callInstruction = dyn_cast<CallInst>(&instruction)) {
+            for (auto& block : F) {
+                for (auto& instruction : block) {
+                    // Sanity check that the instruction pointer is valid.
+                    if (&instruction) {
+                        if (CallInst *callInstruction = dyn_cast<CallInst>(&instruction)) {
 
-                        // The function that is being called and possibly inlined.
-                        Function *callee = callInstruction->getCalledFunction();
+                            // The function that is being called and possibly inlined.
+                            Function *callee = callInstruction->getCalledFunction();
 
-                        // Sanity check if callee exists.
-                        if (callee == nullptr) continue;
+                            // Sanity check if callee exists.
+                            if (callee == nullptr) continue;
 
-                        std::string name = callee->getName().str();
+                            std::string name = callee->getName().str();
 
-                        errs() << "Inlining function " << name << "\n";
-                        InlineFunctionInfo IFI;
-                        bool status = llvm::InlineFunction(callInstruction, IFI);
-                        errs() << "status: " << (status ? "true" : "false") << "\n";
+                            errs() << "Inlining function " << name << "\n";
+                            InlineFunctionInfo IFI;
+                            CallSite CS(callInstruction);
+                            bool status = llvm::InlineFunction(CS, IFI);
+                            errs() << "status: " << (status ? "true" : "false") << "\n";
+                        }
+                    } else {
+                        break;
                     }
                 }
             }
