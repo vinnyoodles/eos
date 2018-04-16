@@ -106,6 +106,7 @@ namespace eosio { namespace chain { namespace wasm_injections {
       static std::map<int32_t, int32_t> function_map;
       // Stores function name mapped by the function index 
       static std::map<int32_t, std::string> function_name_map;
+      static const int32_t THRESHOLD = 100;
    };
 
    struct tables_injection_visitor {
@@ -409,9 +410,6 @@ namespace eosio { namespace chain { namespace wasm_injections {
                }
                fd.code = post_code;
             }
-            /* TODO Vincent, add write to file here */
-            std::cout << "write to a file here\n";
-            std::cout << "size of function map is: " << function_injection_visitor::function_map.size() << "\n";
          }
       private:
          IR::Module* _module;

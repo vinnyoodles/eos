@@ -868,10 +868,16 @@ class capstone_api : public context_aware_api {
         else
           fn_map->emplace( idx, 1 );
 
+        std::ofstream feedback;
+        feedback.open("feedback.txt");
         for (auto iter = fn_map->begin(); iter != fn_map->end(); iter++) {
-          std::cout << "key: " << iter->first << ", value: " << iter->second << "\n";
+          int32_t functionIdx = iter->first;
+          int32_t functionCount = iter->second;
+          if (functionCount > wasm_injections::function_injection_visitor::THRESHOLD) {
+            feedback << functionIdx << "\n";
+          }
         }
-        std::cout << "\n";
+        feedback.close();
       }
 };
 

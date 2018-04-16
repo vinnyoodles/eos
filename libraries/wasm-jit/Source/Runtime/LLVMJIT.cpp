@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 #include "LLVMJIT.h"
 #include "Inline/BasicTypes.h"
 #include "Inline/Timing.h"
@@ -42,6 +46,26 @@ namespace llvm {
         FunctionInlinePass() : FunctionPass(ID) {}
 
         virtual bool runOnFunction(Function &F) {
+            std::ifstream feedback_file("feedback.txt");
+
+            // Check if there is any feedback for inlining.
+            if (!feedback_file.good()) {
+                return false;
+            }
+            std::set<std::string> functionsToInline;
+            std::string line;
+
+            while (std::getline(feedback_file, line)) {
+                std::istringstream iss(line);
+                int functionIdx;
+                if (!(iss >> functionIdx)) {
+                    break;
+                }
+                char buffer[256];
+                sprintf(buffer, "wasmFunc%d_<function #%d>", functionIdx, functionIdx);
+                functionsToInline.insert(buffer);
+            }
+
             for (auto& block : F) {
                 for (auto& instruction : block) {
                     // Sanity check that the instruction pointer is valid.
@@ -52,21 +76,28 @@ namespace llvm {
                             Function *callee = callInstruction->getCalledFunction();
 
                             // Sanity check if callee exists.
-                            if (callee == nullptr) continue;
+                            if (callee == nullptr) {
+                                continue;
+                            }
 
                             std::string name = callee->getName().str();
 
-                            errs() << "Inlining function " << name << "\n";
+                            // Check if the function meets the threshold to be inlined.
+                            // If it does meet, then it will exist in the profiled data.
+                            if (functionsToInline.find(name) == functionsToInline.end()) {
+                                continue;
+                            }
+
                             InlineFunctionInfo IFI;
-                            bool status = llvm::InlineFunction(callInstruction, IFI);
-                            errs() << "status: " << (status ? "true" : "false") << "\n";
+                            errs() << "Inlining: " << name << "\n";
+                            llvm::InlineFunction(callInstruction, IFI);
                         }
                     } else {
                         break;
                     }
                 }
             }
-            return false;
+            return true;
         }
     };
 }

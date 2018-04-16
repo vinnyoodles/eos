@@ -56,7 +56,6 @@ void function_injection_visitor::inject( Module& m) {
     int i = 0;
 
     for ( auto& fd : m.functions.defs ) {
-        std::cout << "Index : " << i << "\n";
         int32_t idx;
         injector_utils::add_import<ResultType::none, ValueType::i32>( m, u8"env", u8"function_tracker", idx);
         wasm_ops::op_types<>::i32_const_t tracked_idx;
