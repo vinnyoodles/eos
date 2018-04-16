@@ -44,9 +44,10 @@ namespace llvm {
         virtual bool runOnFunction(Function &F) {
             for (auto& basicBlock : F) {
                 for (auto& instruction : basicBlock) {
-                    if (const CallInst *callInstruction = dyn_cast<CallInst>(&instruction)) {
+                    if (CallInst *callInstruction = dyn_cast<CallInst>(&instruction)) {
                         errs() << "Found call instruction: " << F.getName() << "\n";
-                        llvm::InlineFunction(callInstruction, NULL, NULL, false);
+                        InlineFunctionInfo IFI;
+                        llvm::InlineFunction(callInstruction, IFI);
                     }
                 }
             }
