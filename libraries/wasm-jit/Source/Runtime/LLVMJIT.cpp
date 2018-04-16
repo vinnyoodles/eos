@@ -42,12 +42,22 @@ namespace llvm {
         FunctionInlinePass() : FunctionPass(ID) {}
 
         virtual bool runOnFunction(Function &F) {
-            for (auto& basicBlock : F) {
-                for (auto& instruction : basicBlock) {
+            for (auto& basic_block : F) {
+                for (auto& instruction : basic_block) {
                     if (CallInst *callInstruction = dyn_cast<CallInst>(&instruction)) {
-                        errs() << "Found call instruction: " << F.getName() << "\n";
+
+                        // The function that is being called and possibly inlined.
+                        Function *callee = callInstruction->getCalledFunction();
+
+                        // Sanity check if callee exists.
+                        if (callee == nullptr) continue;
+
+                        std::string name = callee->getName().str();
+
+                        errs() << "Inlining function " << name << "\n";
                         InlineFunctionInfo IFI;
-                        llvm::InlineFunction(callInstruction, IFI);
+                        bool status = llvm::InlineFunction(callInstruction, IFI);
+                        errs() << "status: " << status ? "true" : "false" << "\n";
                     }
                 }
             }
