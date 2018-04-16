@@ -57,7 +57,7 @@ namespace llvm {
                         errs() << "Inlining function " << name << "\n";
                         InlineFunctionInfo IFI;
                         bool status = llvm::InlineFunction(callInstruction, IFI);
-                        errs() << "status: " << status ? "true" : "false" << "\n";
+                        errs() << "status: " << (status ? "true" : "false") << "\n";
                     }
                 }
             }
