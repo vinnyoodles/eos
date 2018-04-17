@@ -868,6 +868,12 @@ class capstone_api : public context_aware_api {
         else
           fn_map->emplace( idx, 1 );
 
+      //   std::cout << "FUNCTION : " << idx << " called " << fn_map->at(idx) << "\n";
+      //   for (auto iter = fn_map->begin(); iter != fn_map->end(); iter++) {
+      //     std::cout << "key: " << iter->first << ", value: " << iter->second << "\n";
+      //   }
+      //   std::cout << "\n";
+
         std::ofstream feedback;
         std::ifstream threshold_file;
         feedback.open("feedback.txt");

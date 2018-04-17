@@ -43,7 +43,7 @@ def remove_files():
         return
 
 if __name__ == '__main__':
-    threshold_values = [ 1, 2, 21, 88, 176 ]
+    threshold_values = [ 1, 2, 4, 21, 22, 88, 176 ]
     output = open('analysis.csv','w+')
 
     # write csv header
