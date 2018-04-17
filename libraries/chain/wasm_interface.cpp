@@ -885,7 +885,7 @@ class capstone_api : public context_aware_api {
         for (auto iter = fn_map->begin(); iter != fn_map->end(); iter++) {
           int32_t functionIdx = iter->first;
           int32_t functionCount = iter->second;
-          if (functionCount > threshold) {
+          if (functionCount >= threshold) {
             feedback << functionIdx << "\n";
           }
         }
