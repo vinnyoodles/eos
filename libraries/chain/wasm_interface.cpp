@@ -869,11 +869,23 @@ class capstone_api : public context_aware_api {
           fn_map->emplace( idx, 1 );
 
         std::ofstream feedback;
+        std::ifstream threshold_file;
         feedback.open("feedback.txt");
+        threshold_file.open("threshold.txt");
+        int32_t threshold;
+        if (threshold_file.good()) {
+          std::string line;
+          std::getline(threshold_file, line);
+          std::istringstream iss(line);
+          iss >> threshold;
+        } else {
+          threshold = wasm_injections::function_injection_visitor::THRESHOLD; 
+        }
+
         for (auto iter = fn_map->begin(); iter != fn_map->end(); iter++) {
           int32_t functionIdx = iter->first;
           int32_t functionCount = iter->second;
-          if (functionCount > wasm_injections::function_injection_visitor::THRESHOLD) {
+          if (functionCount > threshold) {
             feedback << functionIdx << "\n";
           }
         }
