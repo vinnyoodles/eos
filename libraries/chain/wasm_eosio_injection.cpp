@@ -53,6 +53,12 @@ void function_injection_visitor::initializer() {
 }
 
 void function_injection_visitor::inject( Module& m) {
+    std::ifstream threshold_file("threshold.txt");
+
+    // Check if there is any feedback for inlining.
+    if (!threshold_file.good()) {
+      return;
+    }
     int i = 0;
 
     for ( auto& fd : m.functions.defs ) {

@@ -13,34 +13,43 @@ def run_command():
     capstone_output = tokens[-4]
 
     # time in microseconds
-    time = capstone_output.split(' ')[-1].replace('us', '')
+    time = capstone_output.split(' ')[-1][:-2]
     return int(time)
 
 def run(threshold):
-    remove_files()
+    # start with clean slate by deleting threshold and feedback file.
+    remove_file(THRESHOLD_PATH)
+    remove_file(FEEDBACK_PATH)
 
     # write threshold to the file to be read by the program
     threshold_file = open(THRESHOLD_PATH, 'w+')
     threshold_file.write(str(threshold))
     threshold_file.close()
 
+    if not os.path.exists(THRESHOLD_PATH) or not os.path.isfile(THRESHOLD_PATH):
+        raise Exception('Failed to create threshold file.')
+    elif os.path.exists(FEEDBACK_PATH):
+        raise Exception('Failed to delete feedback file.')
+
+    # first run will create a feedback file, only if threshold file exists.
     before = run_command()
 
     if not os.path.exists(FEEDBACK_PATH) or not os.path.isfile(FEEDBACK_PATH):
-        raise Exception('Failed to create feedback file')
+        raise Exception('Failed to create feedback file.')
 
+    # remove the threshold file to notify the compiler that it does not need to inject anything.
+    remove_file(THRESHOLD_PATH)
+
+    if os.path.exists(THRESHOLD_PATH):
+        raise Exception('Failed to delete threshold file.')
+
+    # second run will use the feedback file to perform inlining.
     after = run_command()
-
-    remove_files()
-
     return before, after
 
-def remove_files():
-    try:
-        os.remove(THRESHOLD_PATH)
-        os.remove(FEEDBACK_PATH)
-    except:
-        return
+def remove_file(file):
+    if os.path.exists(file):
+        os.remove(file)
 
 if __name__ == '__main__':
     threshold_values = [ 1, 2, 4, 21, 22, 88, 176 ]
