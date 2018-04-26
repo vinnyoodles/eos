@@ -6,11 +6,13 @@ with open('analysis.csv','r') as csvfile:
     header = False
     for row in plots:
         if header:
-            plt.plot(int(row[0]), int(row[3]), marker='.')
+            performance = (float(row[1]) / float(row[2])) * 100
+            plt.plot(int(row[0]), performance, marker='.')
         else:
             header = True
 
+plt.axhline(100, color='gray', linestyle='dashed')
 plt.xlabel('Threshold')
-plt.ylabel('Performance')
+plt.ylabel('Performance (%)')
 plt.title('Threshold analysis')
 plt.show()
