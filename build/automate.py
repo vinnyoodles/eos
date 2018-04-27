@@ -4,7 +4,8 @@ FEEDBACK_PATH = 'feedback.txt'
 THRESHOLD_PATH = 'threshold.txt'
 
 def run_command():
-    args = shlex.split('../build/tests/chain_test --run_test=api_tests/capstone_tests --log_level=all')
+    # args = shlex.split('../build/tests/chain_test --run_test=api_tests/capstone_tests --log_level=all')
+    args = shlex.split('../build/tests/chain_test --run_test=api_tests/cf_action_tests --log_level=all')
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     process_status = process.wait()
     stdout, stderr = process.communicate()
@@ -52,7 +53,7 @@ def remove_file(file):
         os.remove(file)
 
 if __name__ == '__main__':
-    threshold_values = [ 1, 2, 4, 21, 22, 88, 176 ]
+    threshold_values = [1, 2, 3, 4, 6, 7, 8, 10, 11, 13, 14, 15, 16, 19, 20, 22, 23, 24, 26, 42, 46, 47, 68, 84, 92, 139, 290, 414, 580]
     output = open('analysis.csv','w+')
 
     # write csv header
